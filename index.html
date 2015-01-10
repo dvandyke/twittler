@@ -2,26 +2,109 @@
 <html>
   <head>
     <script src="jquery.js"></script>
+    <script src= "jquery.timeago.js"></script>
     <script src="data_generator.js"></script>
+    <!-- CSS CONTENT -->
+    
+    <style type = "text/css">
+    
+    #header {
+      magin: 0 auto 0 auto;
+      padding: 10px 0 10px 0;
+      border-bottom: 2px solid #55ACEE;
+    }
+    
+    #header ul {
+      list-style: none;
+      display: inline;
+      padding: 0px;
+    }
+    
+    #header li {
+      padding: 0px;
+      display: inline;
+      text-align: left;   
+    }
+    
+    #navigation {
+      display: inline;
+    }
+    
+    #search {
+      display: inline;
+      float: right;
+      text-align: right;
+    }
+    
+    #tweets li { 
+      display : block;
+      padding: 10px 010px 10px;
+      margin: 5px 0 5px 0;
+      border: 2px solid #cccccc;
+      border-radius: 10px; }
+    
+    #main {
+      min-width: 400px;
+      max-width: 800px;
+      margin: 0 auto 0 auto;
+    }
+    </style>
   </head>
   <body>
+
+    <!-- MAIN NAVIGATION -->
+    <div id="header">
+      <div id= "navigation">
+        <ul>
+        <li><a>Home</a></li>
+        <li><a>Notifications</a></li>
+        <li><a>Message</a></li>
+        <li><a>Discover</a></li>
+      </ul>
+    </div>
+    <div id="search">
+      <input type="text" value="search"></input>
+    </div>
+    </div>
+
+    
+    <div id= "main">
+    <ul id= "tweets"></ul>
+    </div>
+
+    <!-- JAVASCRIPT -->
+
     <script>
 
-      $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
-
-        var index = streams.home.length - 1;
-        while(index >= 0){
+    $(document).ready(function () {
+      $("abbr.timeago").timeago();
+      var $list = $('#tweets');
+        // $body.html('');
+      var index = streams.home.length - 1;
+      while (index >= 0) {
           var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
+          var $tweet = $('<li></li>');
           $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
+          $tweet.appendTo($list);
           index -= 1;
         }
 
-      });
+        // adding new tweets to main page
+      window.setInterval(function () {
+          $('abbr.timeago').timeago();
+          var $entry = $('<li></li>');
+          var index = streams.home.length - 1;
+          var tweety = streams.home[index];
+          var myVar = tweety.created_at;
+          var myVarCorrected = myVar.toISOString();
+          var tweetDate = '<abbr class="timeago" title="nada">'+tweety.created_at+'</abbr>';
+          $entry.html('<b>' + '@' + tweety.user + '</b>' + ' ' + tweetDate + '<br>' + tweety.message);
+          $list.prepend($entry);
+          $('abbr.timeago').attr('title', myVarCorrected);
+        }, 1500);
 
+    });
+        
     </script>
   </body>
 </html>
