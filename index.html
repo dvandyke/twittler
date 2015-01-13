@@ -7,21 +7,44 @@
     <!-- CSS CONTENT -->
     
     <style type = "text/css">
+
+    body {
+      background-image: url("http://www.commtrans.com/wp-content/uploads/2014/08/texture-background-creative-bubbles-wallpaper.jpg");
+      margin: 0 0 0 0;
+      padding: 0 0 0 0;
+    }
     
     #header {
-      magin: 0 auto 0 auto;
+      background-color: white;
+      magin: 0 0 0 0;
       padding: 10px 0 10px 0;
       border-bottom: 2px solid #55ACEE;
     }
+
+     #main {
+      font-family: "Gotham", "Helvetica Neue";
+      font-size: 14em
+      margin: 0 auto;
+    }
+
+    #header div {
+      display: inline;
+    }
+
+    #bird {
+      position: absolute;
+      left: 50%;
+    }
+
     
     #header ul {
       list-style: none;
       display: inline;
-      padding: 0px;
+      padding: 0 0 0 10px;
     }
     
     #header li {
-      padding: 0px;
+      padding: 0;
       display: inline;
       text-align: left;   
     }
@@ -35,19 +58,56 @@
       float: right;
       text-align: right;
     }
+
+    #dashboard, #tweetDiv, #submission {
+      display: block;
+      margin: 0 auto;
+      width: 48%;
+      margin: 1%;
+    }
+
+    #tweets {
+      background-color: none;
+      margin: 0 auto 0 auto;
+      padding: 0 0 0 0;
+    }
     
     #tweets li { 
+      background-color: white;
       display : block;
-      padding: 10px 010px 10px;
+      padding: 10px 0 10px 10px;
       margin: 5px 0 5px 0;
       border: 2px solid #cccccc;
       border-radius: 10px; }
-    
-    #main {
-      min-width: 400px;
-      max-width: 800px;
-      margin: 0 auto 0 auto;
+
+      #sendTweet {
+        border-radius: 15px;
+        font-size: 14px;
+        min-width: 350px;
+        max-width: 500px;
+        border: solid 1px #55ACEE;
+        padding: 5px 9px;
+      }
+
+      #sendTweet:focus {
+        transform:scale(1.02);
+      }
+
+    .timeago {
+      margin: 0 5px 0 5px;
+      color: #8899a6;
+      float:right;
     }
+
+    #tweeter {
+      font-weight: bold;
+    }
+
+    #tweetBody {
+      font-family: "Helvetica Neue";
+      margin: 5px 0 5px 0;
+    }
+
     </style>
   </head>
   <body>
@@ -62,6 +122,7 @@
         <li><a>Discover</a></li>
       </ul>
     </div>
+    <div id="bird"><img src="Twitter_logo_blue.png"  alt= "twittler bird" title="headerImage" width="25px"></div>
     <div id="search">
       <input type="text" value="search"></input>
     </div>
@@ -69,7 +130,15 @@
 
     
     <div id= "main">
-    <ul id= "tweets"></ul>
+      <div id="submission">
+      <input id="sendTweet" type="text" placeholder="What's on your mind?"></input>
+      </div>
+      <!-- <div id="dashboard"> -->
+        <!-- YASSSS -->
+        <!-- <div id="dashBackground">Hello friend</div> -->
+        <!-- <div id="dashProfile">Sup man</div> -->
+      <!-- </div> -->
+    <div id="tweetDiv"><ul id= "tweets"></ul></div>
     </div>
 
     <!-- JAVASCRIPT -->
@@ -77,30 +146,57 @@
     <script>
 
     $(document).ready(function () {
-      $("abbr.timeago").timeago();
+      $("time.timeago").timeago();
       var $list = $('#tweets');
         // $body.html('');
       var index = streams.home.length - 1;
-      while (index >= 0) {
+     /*while (index >= 0) {
           var tweet = streams.home[index];
           var $tweet = $('<li></li>');
           $tweet.text('@' + tweet.user + ': ' + tweet.message);
           $tweet.appendTo($list);
           index -= 1;
-        }
+        }*/
 
         // adding new tweets to main page
       window.setInterval(function () {
-          $('abbr.timeago').timeago();
           var $entry = $('<li></li>');
           var index = streams.home.length - 1;
           var tweety = streams.home[index];
           var myVar = tweety.created_at;
           var myVarCorrected = myVar.toISOString();
-          var tweetDate = '<abbr class="timeago" title="nada">'+tweety.created_at+'</abbr>';
-          $entry.html('<b>' + '@' + tweety.user + '</b>' + ' ' + tweetDate + '<br>' + tweety.message);
+
+// TEST
+          var $tweetHeader = $('<div id="tweetHeader"></div>')
+          var $boldUser = $('<span id="tweeter"></span>');
+          $boldUser.html('@'+tweety.user);
+          
+          var $tweetDate = $('<span id="timestamp"></span>');
+          $tweetDate.html('<time class="timeago" datetime="what">'+myVarCorrected+'</time>');
+          $('time.timeago').attr('datetime', myVarCorrected);
+          $('time.timeago').timeago();
+       
+          
+
+          var $messageBody = $('<p id=tweetBody></p>');
+          $messageBody.html(tweety.message);
+
+
+          $tweetHeader.prepend($boldUser);
+          $tweetHeader.append($tweetDate);
+          $entry.prepend($tweetHeader);
+          $entry.append($messageBody);
+
+          // $('time.timeago').timeago();
           $list.prepend($entry);
-          $('abbr.timeago').attr('title', myVarCorrected);
+
+
+// END TEST
+
+          var tweetDate = '<abbr class="timeago" title="nada">'+tweety.created_at+'</abbr>';
+          // $entry.html('<b>' + '@' + tweety.user + '</b>' + ' ' + tweetDate + '<br>' + tweety.message);
+          // $list.prepend($entry);
+          // $('abbr.timeago').attr('title', myVarCorrected);
         }, 1500);
 
     });
